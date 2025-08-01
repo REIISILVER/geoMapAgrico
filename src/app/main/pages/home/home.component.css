@@ -1,0 +1,21 @@
+.cabezera{
+
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.cabezera nav{
+  display: flex;
+  gap: 80px;
+  align-items: center;
+}
+
+.cabezera nav ul{
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}

@@ -1,0 +1,59 @@
+<main>
+  <h1>Register</h1>
+  <form (ngSubmit)="createUser($event)" [formGroup]="registerForm" class="register-form">
+    <mat-form-field class="form-field" appearance="outline">
+      <mat-label>nombre</mat-label>
+      <input formControlName="name" matInput type="text">
+      @if (registerForm.controls['name'].hasError('required')) {
+        <mat-error>Nombre es <strong>requerido</strong></mat-error>
+      }
+    </mat-form-field>
+     <mat-form-field appearance="outline">
+      <mat-label>email</mat-label>
+      <input formControlName="email" matInput type="text">
+
+    @if (registerForm.controls['email'].hasError('pattern') && !registerForm.controls['email'].hasError('required')) {
+      <mat-error>Please enter a valid email address</mat-error>
+    }
+    @if (registerForm.controls['email'].hasError('required')) {
+      <mat-error>Email is <strong>required</strong></mat-error>
+    }
+    </mat-form-field>
+     <mat-form-field appearance="outline">
+      <mat-label>contraseña</mat-label>
+      <input formControlName="password" matInput type="password">
+      @if (registerForm.controls['password'].hasError('required')) {
+        <mat-error>Contraseña es <strong>requerida</strong></mat-error>
+
+      }
+      @if(registerForm.controls['password'].hasError('minlength')) {
+        <mat-error>Contraseña debe tener al menos <strong>6 caracteres</strong></mat-error>
+      }
+    </mat-form-field>
+     <mat-form-field appearance="outline">
+      <mat-label>Vuelve a escribir la contraseña</mat-label>
+      <input formControlName="confirmPassword" matInput type="password">
+      @if (evaluatePasswordMatch() == false) {
+        <mat-error>No es la misma contraseña </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Rol</mat-label>
+      <mat-select formControlName="rol">
+        @for (rol of rols; track rol.id) {
+          <mat-option [value]="rol.id">{{rol.description}}</mat-option>
+        }
+      </mat-select>
+      @if (registerForm.controls['rol'].hasError('required')) {
+        <mat-error>Rol es <strong>requerido</strong></mat-error>
+      }
+
+    </mat-form-field>
+
+
+    <div class="input-btn">
+      <button type="submit" mat-button>crear cuenta</button>
+      <button routerLink="/login"  class="cancelBtn" mat-button [ngStyle]="{'color':'white'}">cancelar</button>
+    </div>
+  </form>
+</main>
