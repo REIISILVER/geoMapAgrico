@@ -1,0 +1,19 @@
+<body>
+  <h1>Crear parcela</h1>
+  <span>El nombre de la parcela no puede estar vacío</span>
+  <form action="" [formGroup]="parcela" >
+    <mat-form-field>
+      <mat-label>nombre parcela</mat-label>
+       <input type="text" formControlName="nombre" matInput>
+        @if(this.parcela.controls['nombre'].valid){
+            <mat-error>el nombre es obligatorio</mat-error>
+        }
+    </mat-form-field>
+    <div class="buttons">
+         <button mat-flat-button (click)="crearForm()"  type="submit">crear parcela</button>
+         <button mat-button (click)="disableModal()" class="cancel" >cancel</button>
+    </div>
+
+  </form>
+
+</body>

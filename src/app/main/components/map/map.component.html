@@ -1,1 +1,14 @@
-<p>map works!</p>
+<div class="controls" #controls>
+  <button mat-button [matMenuTriggerFor]="menu">Dibujar parcela</button>
+  <mat-menu #menu="matMenu">
+    <button (click)="toolBars('Polygon')"  mat-menu-item><button mat-button ><mat-icon fontIcon="timeline"></mat-icon>lineas</button></button>
+
+     <button (click)="toolBars('Point')"  mat-menu-item><button mat-button ><mat-icon fontIcon="radio_button_unchecked"></mat-icon>punto</button></button>
+
+  </mat-menu>
+
+
+  <button mat-button (click)="guardarParcela()"><mat-icon fontIcon="download"></mat-icon>descargar</button>
+
+</div>
+<div #map id="map" [ngStyle]="{'height':'50vh','width':'1000px'}"></div>

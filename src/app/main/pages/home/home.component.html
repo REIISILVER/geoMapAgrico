@@ -1,11 +1,35 @@
-<main>
+<main #main>
   <section class="cabezera">
     <nav>
       <span>GestoGricola</span>
       <ul>
         <li><mat-icon fontIcon="home"></mat-icon></li>
+        <li><span>Mis parcelas</span></li>
         <li><mat-icon fontIcon="person"></mat-icon></li>
       </ul>
     </nav>
   </section>
+  <h1>Barra de herramientas</h1>
+  <section class="map-container">
+
+    <!-- <app-barSearch (result)="obtenervalor($event)" class="searchBar"> </app-barSearch> -->
+
+    <app-map (modalActiveEmitter)="StatusModal($event)" [ngStyle]="{'height':'500px','width':'400px'}"
+      [Parcelas]="parcelas" (ObjParcela)="getInforParcela($event)" (Pacelageom)="almacenarParcela($event)"></app-map>
+
+  </section>
+  @if(ModalActive){
+  <app-modal-create-parcela class="modal" (ModalEmitter)="StatusModal($event)"
+    (formulario)="getParcela($event)"></app-modal-create-parcela>
+  }
+
+  @if(ActividadModal){
+  <app-actividades-modal class="modal_padre" [informacionParcela]="parcela_Info" (closeModal)="getCloseActividadModal($event)"></app-actividades-modal>
+  }
+
+  @if(loading){
+
+  <spinner></spinner>
+
+  }
 </main>

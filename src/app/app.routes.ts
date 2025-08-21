@@ -23,6 +23,10 @@ export const routes: Routes = [
         path:'home',
         loadComponent: () => import('./main/pages/home/home.component').then(m => m.HomeComponent)
       },
+      {
+        path:'**',
+        redirectTo:'home'
+      }
     ]
   },
   {

@@ -43,6 +43,7 @@ export class LoginComponent {
           console.log('Login response:', resp);
           // Handle successful login response here
           localStorage.setItem('token', resp.data);
+          localStorage.setItem('user', resp.user);
           this.routerM.navigate(['/main/home']);
         },
         error: (err: HttpErrorResponse) =>{

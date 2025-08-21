@@ -1,0 +1,24 @@
+<mat-card class="actividades-modal" appearance="outlined">
+  <section class="informacion">
+    <h1>información de la parcela actual</h1>
+    <span>{{informacionParcela.nombre}}</span>
+
+  </section>
+  <section class="actividades">
+    @if (actividades.length == 0) {
+      <p>No hay actividades asociadas a esta parcela</p>
+    }@else{
+      <!-- <ul>
+        @for (actividad of actividades; track actividad.id) {
+          <li>
+            <span>{{actividad.nombre}}</span>
+            <span>{{actividad.fecha}}</span>
+            <span>{{actividad.descripcion}}</span>
+          </li>
+        }
+      </ul> -->
+    }
+  </section>
+  <button mat-flat-button (click)="cancel()">cerrar</button>
+  <button mat-flat-button class="danger_btn" (click)="cancel()">asignar actividades</button>
+</mat-card>

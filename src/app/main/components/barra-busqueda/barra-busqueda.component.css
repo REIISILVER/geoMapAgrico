@@ -1,0 +1,15 @@
+.container_principal form{
+  display: flex;
+  background-color: #cccc;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.container_principal input{
+  border:none;
+  background-color: transparent;
+  outline: none;
+  font-size: 17px;
+}
