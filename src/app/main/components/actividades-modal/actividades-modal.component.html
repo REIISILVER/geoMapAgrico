@@ -1,24 +1,67 @@
-<mat-card class="actividades-modal" appearance="outlined">
-  <section class="informacion">
-    <h1>información de la parcela actual</h1>
-    <span>{{informacionParcela.nombre}}</span>
+<main class="main">
+  <mat-card class="actividades-modal" appearance="outlined">
+    <section class="informacion">
+      <h1>información de la parcela actual</h1>
+      <span>{{informacionParcela.nombre}}</span>
+      <button (click)="deleteParcela()" mat-button>Eliminar parcela <mat-icon fontIcon="delete"></mat-icon></button>
 
-  </section>
-  <section class="actividades">
-    @if (actividades.length == 0) {
+    </section>
+    <section class="actividades">
+      @if (actividades.length == 0) {
       <p>No hay actividades asociadas a esta parcela</p>
-    }@else{
-      <!-- <ul>
+      }@else{
+      <ul>
         @for (actividad of actividades; track actividad.id) {
-          <li>
-            <span>{{actividad.nombre}}</span>
-            <span>{{actividad.fecha}}</span>
-            <span>{{actividad.descripcion}}</span>
-          </li>
+        <li class="actividad_container">
+          <span class="actividad_item">{{actividad.tipo}} </span>
+          <span class="actividad fecha">{{actividad.fecha_cultivo}} </span>
+          <span class="actividad fecha">{{actividad.fecha_cosecha}} </span>
+          <span ><button [routerLink]="'/main/cultivo/'+actividad.id" class="btn-ct"  mat-mini-fab matTooltip="ver más" matTooltipPosition="right"><mat-icon  fontIcon="visibility"></mat-icon></button> </span>
+          <span ><button (click)="eliminarCultivo(actividad.id)" class="btn-ct" mat-mini-fab matTooltip="borrar cultivo"  matTooltipPosition="right"> <mat-icon fontIcon="delete"  [ngStyle]="{'color':'red'}"></mat-icon> </button> </span>
+        </li>
         }
-      </ul> -->
-    }
-  </section>
-  <button mat-flat-button (click)="cancel()">cerrar</button>
-  <button mat-flat-button class="danger_btn" (click)="cancel()">asignar actividades</button>
-</mat-card>
+      </ul>
+      }
+    </section>
+    <button mat-flat-button (click)="cancel()">cerrar</button>
+    <button mat-flat-button (click)="activatFormAddCultivo(true)" class="danger_btn">asignar cultivo</button>
+  </mat-card>
+
+  @if(agCultivo){
+  <mat-card class="formulario-actividades">
+    <form [formGroup]="formCultivo" (submit)="guardarCultivo()">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre del cultivo</mat-label>
+        <input formControlName="tipo" matInput name="nombre" required>
+
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Fecha de cultivo</mat-label>
+        <input [matDatepickerFilter]="filtroFecha" formControlName="fecha_cultivo" matInput [matDatepicker]="picker"
+          name="cultivo" required>
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Fecha de cosecha</mat-label>
+        <input matInput formControlName="fecha_cosecha" [matDatepicker]="picker2" name="cosecha" required>
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+
+      <div class="btn-actions">
+        <button type="submit" mat-flat-button>Asignar</button>
+        <button mat-flat-button [ngStyle]="{'background-color':'red'}"
+          (click)="activatFormAddCultivo(false)">Cancelar</button>
+      </div>
+
+    </form>
+  </mat-card>
+  }
+</main>
+@if(loading){
+<spinner></spinner>
+}

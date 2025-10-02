@@ -1,0 +1,56 @@
+<main>
+  @if(actividades.length > 0){
+  <div class="container">
+
+
+
+    <div class="cuerpoForm">
+      <form [formGroup]="formAct">
+
+        <div class="firstCont" formArrayName="items">
+          @for (actividad of items.controls; track $index) {
+          <div class="critic" [formGroupName]="$index">
+            <div class="input">
+              <input type="text" formControlName="nombre">
+            </div>
+            <div class="input">
+              <textarea class="txt" formControlName="descripcion"></textarea>
+
+            </div>
+            <div class="input">
+              <select formControlName="tipo" name="tipo" id="tipo">
+
+                <option value="riego">Riego</option>
+                <option value="fertilización">Fertilización</option>
+                <option value="siembra">Siembra</option>
+                <option value="desmonte">Desmonte</option>
+              </select>
+            </div>
+            <div class="button-group">
+              @if(!actividad.enabled){
+              <button (click)="update(actividad.get('id')?.value)"><mat-icon fontIcon="edit"></mat-icon></button>
+              }@else {
+              <button (click)="sendUpdateData(actividad.get('id')?.value)"><mat-icon
+                  fontIcon="save"></mat-icon></button>
+
+              <button (click)="cancelarUpdate(actividad.get('id')?.value)"><mat-icon
+                  fontIcon="cancel"></mat-icon></button>
+              }
+              <button (click)="delete(actividad.get('id')?.value)"><mat-icon fontIcon="delete"></mat-icon></button>
+            </div>
+
+          </div>
+          }
+        </div>
+
+
+      </form>
+    </div>
+
+  </div>
+
+  }@else {
+  <span>No hay activides en este cultivo</span>
+  }
+
+</main>

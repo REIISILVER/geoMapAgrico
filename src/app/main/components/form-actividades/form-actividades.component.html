@@ -1,0 +1,31 @@
+<mat-card class="card">
+  <form [formGroup]="FormAct" (submit)="enviarData()">
+  <mat-form-field appearance="outline">
+    <mat-label>Nombre</mat-label>
+    <input formControlName="nombre" type="text" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Descripción</mat-label>
+    <input formControlName="descripcion" type="text" matInput>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Tipo</mat-label>
+    <mat-select formControlName="tipo" name="tipo" id="tipo">
+      <mat-option value="riego">Riego</mat-option>
+      <mat-option value="fertilización">Fertilización</mat-option>
+      <mat-option value="siembra">Siembra</mat-option>
+      <mat-option value="desmonte">Desmonte</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+
+  <div class="actions_btn">
+    <button mat-button type="submit">Crear actividad</button>
+    <button type="button" (click)="closeModal()" mat-flat-button [ngStyle]="{'background-color':'red'}">Cancelar</button>
+  </div>
+
+</form>
+
+</mat-card>

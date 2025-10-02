@@ -33,7 +33,7 @@ export class ModalCreateParcelaComponent {
       console.error('El formulario no puede estar vacio')
       return
     }
-    console.log('enviando datos.....')
+
     this.formulario.emit(this.parcela.value)
   }
 

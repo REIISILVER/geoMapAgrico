@@ -1,0 +1,116 @@
+<main #main class="main">
+  <section class="info_basica">
+    <mat-card class="card">
+      <form [formGroup]="formCultivo">
+        <div class="contenedorInputs">
+          <input type="text" formControlName="tipo">
+          <div class="actions">
+
+            @if(editCultivoStatus && formCultivo.get('tipo')?.enabled){
+            <mat-icon (click)="switchEditCultivoMod('cancelar','tipo')" fontIcon="cancel"></mat-icon>
+            <mat-icon (click)="saveEditCultivo()" fontIcon="save"></mat-icon>
+            }@else {
+            <mat-icon (click)="switchEditCultivoMod('editar','tipo')" fontIcon="edit"></mat-icon>
+            }
+          </div>
+        </div>
+        <div class="contenedorInputs">
+
+
+          <mat-form-field class="example-full-width">
+
+            <mat-label>Fecha de cultivo</mat-label>
+            <input formControlName="fecha_cultivo" matInput [matDatepickerFilter]="filtros.cultivo" [matDatepicker]="picker1">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+          <div class="actions">
+
+            @if(editCultivoStatus && formCultivo.get('fecha_cultivo')?.enabled){
+            <mat-icon (click)="switchEditCultivoMod('cancelar','fecha_cultivo')" fontIcon="cancel"></mat-icon>
+            <mat-icon (click)="saveEditCultivo()" fontIcon="save"></mat-icon>
+            }@else {
+            <mat-icon (click)="switchEditCultivoMod('editar','fecha_cultivo')" fontIcon="edit"></mat-icon>
+            }
+          </div>
+        </div>
+        <div class="contenedorInputs">
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Fecha de cosecha</mat-label>
+            <input  formControlName="fecha_cosecha" matInput [matDatepickerFilter]="filtros.cosecha" [matDatepicker]="picker">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <div class="actions">
+            @if(editCultivoStatus && formCultivo.get('fecha_cosecha')?.enabled){
+            <mat-icon (click)="switchEditCultivoMod('cancelar','fecha_cosecha')" fontIcon="cancel"></mat-icon>
+            <mat-icon (click)="saveEditCultivo()" fontIcon="save"></mat-icon>
+            }@else {
+            <mat-icon (click)="switchEditCultivoMod('editar','fecha_cosecha')" fontIcon="edit"></mat-icon>
+            }
+          </div>
+        </div>
+
+      </form>
+
+    </mat-card>
+    <!-- TODO: permitir editar la informacion básica -->
+
+  </section>
+  <section class="actividades">
+    <mat-card class="act_card">
+      <h2>Sección de actividades</h2>
+      <!-- TODO: FORMULARIO PARA REGISTRAR ACTIVIDADES EN EL CULTIVO -->
+
+      <button class="btnCrearAct" (click)="activateModal()" mat-flat-button>Registrar una actividad</button>
+      <app-table-actividades (mensjaeEmiter)="getMessage($event)" [actividades]="actividades"></app-table-actividades>
+    </mat-card>
+
+    <mat-card class="insumos_c">
+      <h2>Sección de Insumos</h2>
+
+      <button class="btn-rr" (click)="activateModalRecursos()">Registrar un nuevo insumo</button>
+      <!-- ejemplo de recursos -->
+      <app-recursos-table (mensajeEmiter)="getMessage($event)" [listaRecursos]="RecursosObj"></app-recursos-table>
+    </mat-card>
+
+  </section>
+  <section class="clima">
+    <mat-card class="card_clima">
+      <div class="info_c">
+        <span><mat-icon fontIcon="cloud"></mat-icon>{{clima_obj.current.temperature_2m}} °C</span>
+        <!-- <span><mat-icon fontIcon="water_drop"></mat-icon></span> -->
+        <span><mat-icon fontIcon="air"></mat-icon>{{clima_obj.current.wind_speed_10m}} km/h</span>
+      </div>
+
+      <div class="clima_icon">
+
+        @if(clima_obj.current.weathercode){
+        <span>{{getWeatherCodes(clima_obj.current.weathercode).text}}</span>
+        <span class="icons">{{getWeatherCodes(clima_obj.current.weathercode).icon}}</span>
+        }
+      </div>
+    </mat-card>
+
+
+  </section>
+</main>
+<!-- formulario para agregar actividads -->
+@if(statusModal){
+<app-form-actividades (modal_status)="getStatus($event)" (objecto)="createActividad($event)"></app-form-actividades>
+}
+
+<!-- formulario para agregar recursos -->
+@if(modalFormRc){
+<app-form-recursos (cerrarModal)="getCancelRecuros($event)" (obj)="sendDatos($event)"></app-form-recursos>
+}
+
+@if (loading) {
+<spinner></spinner>
+}
+@if(messageActive){
+<app-message [mensaje]="message" [color]="color"></app-message>
+}

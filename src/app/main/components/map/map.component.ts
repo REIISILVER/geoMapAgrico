@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, PLATFORM_ID, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges, ViewChild } from '@angular/core';
 
 import Map from 'ol/Map.js';
 import OSM from 'ol/source/OSM.js';
@@ -17,7 +17,7 @@ import GeoJSON from 'ol/format/GeoJSON.js';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { Geom, Geometry, Tipos } from '../../interfaces/draw.interfaces';
+import { Geom, Geometry, Tipos, updateParcela } from '../../interfaces/draw.interfaces';
 import Interaction from 'ol/interaction/Interaction';
 import Select from 'ol/interaction/Select.js';
 import "ol-ext/dist/ol-ext.css"
@@ -32,6 +32,7 @@ import { asArray } from 'ol/color';
 import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
 import Text from 'ol/style/Text';
+import Modify from 'ol/interaction/Modify.js';
 
 import FullScreen from 'ol/control/FullScreen.js';
 
@@ -43,7 +44,7 @@ import FullScreen from 'ol/control/FullScreen.js';
   styleUrl: './map.component.css'
 
 })
-export class MapComponent implements AfterViewInit, OnChanges {
+export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private platformId = inject(PLATFORM_ID);
 
@@ -65,6 +66,11 @@ export class MapComponent implements AfterViewInit, OnChanges {
   @Output()
   public ObjParcela = new EventEmitter<ParcelasInfo>;
 
+  @Output()
+  public ModifiObj = new EventEmitter<updateParcela>;
+
+  @Output() modalModify = new EventEmitter<boolean>;
+
 
 
   @ViewChild('map') mapElement!: ElementRef<HTMLElement>
@@ -73,13 +79,17 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
   seachControl: any;
 
+  private mapClickSubscription: any; //subscription para eventos del mapa
+
 
   ngOnChanges(changes: SimpleChanges): void {
 
-    console.log('parcelas recibidas:', this.Parcelas)
+    //lo primero que hay que hacer es eliminar todas las capas de parcelas que ya existan
+    const layersToRemove = this.map.getLayers().getArray().filter(layer => layer.get('title') === 'Parcelas');
+    layersToRemove.forEach(layer => this.map.removeLayer(layer));
 
     //ahi que crear features a partir de las parcelas recibidas
-
+    console.log('ha sucedido un cambio',this.Parcelas);
     const features: Feature<gemotries>[] = this.Parcelas.map((parcela) => {
       const geojson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' });
       //const feature = geojson.readFeature(parcela.ubicacion, { featureProjection: 'EPSG:3857' });
@@ -96,7 +106,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
     })
 
 
-    console.log('features creadas:', features)
+
     this.vectorSource.clear();
     this.vectorSource.addFeatures(features);
 
@@ -108,6 +118,14 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
 
   }
+
+  ngOnDestroy() {
+  if (this.mapClickSubscription) {
+    this.mapClickSubscription.unsubscribe();
+    // O si es un event listener de OpenLayers:
+    this.map.un('click', this.mapClickSubscription);
+  }
+}
 
 
   ngAfterViewInit(): void {
@@ -143,8 +161,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
           zoom: 7,
         }),
       });
-      console.log('Map initialized', this.mapElement.nativeElement);
-      console.log(this.map.getView().getProjection())
+
 
       //agregar e switcher de capas
       const switchCapas = new LayerSwitcher({ mouseover: true });
@@ -159,7 +176,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
       this.map.addControl(this.seachControl);
 
-      console.log('control de busqueda agregado', this.seachControl)
+
 
       //agregamos estilos para resaltar el texto de busqueda
 
@@ -169,18 +186,46 @@ export class MapComponent implements AfterViewInit, OnChanges {
       const selectP = new Select({ style: this.getStyles })
       this.map.addInteraction(selectP);
 
+
+
       //hacer zoon al area
       this.seachControl.on('select', (event: any) => {
-        console.log('feature seleccionada:', event);
+
 
         selectP.getFeatures().clear();
         selectP.getFeatures().push(event.search);
         const geometry = event.search.getGeometry()!.getFirstCoordinate();
         this.map.getView().animate({ zoom: 16, center: geometry, duration: 1000 });
 
+        //agregar el control modify por si se quiere modificar la parcela
+        const modify = new Modify({ features: selectP.getFeatures() });
+        this.map.addInteraction(modify);
+        //funcion que se activa al iniciar la modificacion de la parcela
+        modify.on('modifystart', (e) => {
+          //esto va a cerrar el modal que actualiza al momento de iniciar la modificacion
+          this.modalModify.emit(false);
+        })
 
 
+        //funcion que se activa al terminar de modificar la parcela
+        modify.on('modifyend', (e) => {
 
+          const formato = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' });
+          const geojson = JSON.parse(formato.writeFeature(e.features.getArray()[0]))
+
+          const obj: updateParcela = {
+            id: e.features.getArray()[0].get('id'),
+            nombre: e.features.getArray()[0].get('nombre'),
+            ubicacion: geojson.geometry
+          }
+
+
+          this.ModifiObj.emit(obj)
+
+
+          this.modalModify.emit(true)
+
+        })
 
 
       })
@@ -193,13 +238,13 @@ export class MapComponent implements AfterViewInit, OnChanges {
         const features = this.map.getFeaturesAtPixel(event.pixel);
 
         this.map.forEachFeatureAtPixel(event.pixel, (feature) => {
-          console.log('feature clicked:', feature);
+
           const obj: ParcelasInfo = {
             id: feature.get('id'),
             nombre: feature.get('nombre'),
             user_id: feature.get('user_id'),
           }
-          console.log('mostrar info', obj)
+
 
           this.ObjParcela.emit(obj);
 
@@ -226,12 +271,12 @@ export class MapComponent implements AfterViewInit, OnChanges {
       }),
       text: new Text(
         {
-          text:  feature.get('nombre') || 'Sin nombre',
+          text: feature.get('nombre') || 'Sin nombre',
           fill: new Fill({
             color: 'black',
 
           }),
-          font:'16px Arial'
+          font: '16px Arial'
         }
       )
     })
@@ -247,7 +292,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         }
-        console.log('Current position:', obj);
+
         return obj
       })
     }
@@ -257,7 +302,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
   //dibujar terreno
   toolBars(tipo: string) {
 
-    console.log(this.isDraw)
+
 
     //if para definir que tipo de dibujo se va a utilizar
     if (tipo == 'Polygon') {
@@ -266,7 +311,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
       //TODO!=: MOSTRAR UN MODAL PARA CREAR LA PARCELA..AUN NO SE ALMACENARAN LOS DATOS
       i_poligon.on('drawend', (event) => {
-        console.log('terminando de dibujar')
+
 
         i_poligon.setActive(false);
         this.enableModal()
@@ -285,7 +330,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
       this.dibujarElemento(i_circle);
       i_circle.on('drawend', (event) => {
-        console.log('terminando de dibujar')
+
         i_circle.setActive(false);
         this.enableModal()
         //se agrega el feature al vector source
@@ -302,7 +347,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
       this.dibujarElemento(i_point);
       i_point.on('drawend', (event) => {
-        console.log('terminando de dibujar', i_point.getMap());
+
         i_point.setActive(false);
         this.enableModal()
         //se agrega el feature al vector source
@@ -324,7 +369,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
 
 
-    console.log('tipo selecionado', tipo)
+
     const vectorLayer = new VectorLayer({ source: this.vectorSource })
 
     this.map.addLayer(vectorLayer)
@@ -358,9 +403,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
     //   return JSON.parse(formato.writeFeature(parcela))
     // })
 
-    console.log('object completo', geojson)
 
-    console.log('elemento creado ', geojson.geometry)
     const objeto: Geom = geojson.geometry
     // objeto.coordinates = toLonLat(objeto.coordinates as [number, number]);
 
@@ -369,7 +412,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
   guardarParcela() {
     const parcela = this.map.getAllLayers()
-    console.log('guardando parcela...', parcela)
+
     //aqui se envia mediante output al componente padre para que se guarde en el backend
   }
 
@@ -378,7 +421,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
   }
 
   enableModal() {
-    console.log('activando')
+
     this.modalActiveEmitter.emit(true)
   }
 

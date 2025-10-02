@@ -9,16 +9,24 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/materi
 import { AuthService } from '../../services/auth.service';
 import { Rols } from '../../interfaces/auth.interfaces';
 import { RouterLink } from '@angular/router';
+import { SpinnerComponent } from '../../../barril/shared/spinner/spinner.component';
+import { loadingSpinner } from '../../../../barril/helpers';
+import { MessageComponent } from '../../../barril/message/message.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
-  imports: [MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, ReactiveFormsModule, CommonModule, RouterLink],
-  providers: [ {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}],
+  imports: [MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, ReactiveFormsModule, CommonModule, RouterLink, SpinnerComponent, MessageComponent],
+  providers: [{ provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher }],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  public rols: Rols[] = [{id: 1, description: 'gerente'}, {id: 2, description: 'operario'}];
+  public rols: Rols[] = [{ id: 1, description: 'gerente' }, { id: 2, description: 'operario' }];
+  public loading: boolean = false;
+  public mensaje: string = '';
+  public showMessage: boolean = false;
+  public color: string = '';
   private userService = inject(AuthService);
   private fv = inject(FormBuilder);
   public registerForm: FormGroup = this.fv.group(
@@ -27,28 +35,39 @@ export class RegisterComponent {
       email: this.fv.control('', [Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'), Validators.required]),
       password: this.fv.control('', [Validators.required, Validators.minLength(6)]),
       confirmPassword: this.fv.control('', [Validators.required, Validators.minLength(6)]),
-      rol : this.fv.control('', [Validators.required])
+      rol: this.fv.control('', [Validators.required])
     }
   )
 
 
-  createUser(e: Event){
+  createUser(e: Event) {
     e.preventDefault();
     // Logic to create a user will go here
-    if(this.registerForm.invalid){
+    if (this.registerForm.invalid) {
       console.error('Form is invalid');
-      console.log(this.registerForm.hasError('email'));
+      (this.registerForm.hasError('email'));
       return;
     }
 
-    console.log('User created', this.registerForm.value);
+    if(this.evaluatePasswordMatch() === false){
+      this.switchMessage('Las contraseñas no coinciden', false);
+      return;
+    }
+    this.loading = loadingSpinner(this.loading);
+
+
     this.userService.register_user(this.registerForm.value).subscribe(
       {
-        next:(resp) => {
-          console.log('User registered successfully', resp);
+        next: (resp) => {
+
+          this.loading = loadingSpinner(this.loading);
+          this.switchMessage(resp.mensaje, true);
+          this.registerForm.reset();
         },
-        error:(err) => {
+        error: (err: HttpErrorResponse) => {
           console.error('Error registering user', err);
+          this.loading = loadingSpinner(this.loading);
+           this.switchMessage(err.message, false);
 
         }
       }
@@ -57,9 +76,31 @@ export class RegisterComponent {
 
 
   evaluatePasswordMatch(): boolean {
+
     const password = this.registerForm.get('password')?.value;
     const confirmPassword = this.registerForm.get('confirmPassword')?.value;
+
     return password === confirmPassword;
+  }
+
+
+  switchMessage(mensaje: string, status: boolean){
+    //status true es valido, falso ocurrio un error
+    if(status){
+      this.mensaje = mensaje;
+      this.color = 'rgb(0, 189, 214)';
+      this.showMessage = true;
+      setTimeout(()=>{
+        this.showMessage = false;
+      }, 3000)
+    }else{
+      this.mensaje = mensaje;
+      this.color = 'rgb(211, 13, 46)';
+      this.showMessage = true;
+      setTimeout(()=>{
+        this.showMessage = false;
+      }, 3000)
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-.actividades-modal{
+.actividades-modal {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
@@ -8,7 +8,77 @@
   height: 30dvh;
 }
 
-.danger_btn{
+.informacion {
+  display: flex;
+  /* Para alinear elementos en una fila */
+  flex-direction: column;
+  /* Apila los elementos verticalmente */
+  align-items: center;
+  /* Centra los elementos horizontalmente */
+  padding: 20px;
+  background-color: white;
+  /* Fondo blanco para la sección */
+  border-radius: 8px;
+  /* Bordes ligeramente redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Sombra sutil */
+  margin-bottom: 20px;
+  /* Espacio debajo de la sección */
+}
+
+.informacion h1 {
+  color: black;
+  /* Título en negro */
+  font-size: 2em;
+  /* Tamaño de fuente más grande para el título */
+  margin-bottom: 10px;
+  text-align: center;
+  /* Centra el texto del título */
+}
+
+.informacion span {
+  color: rgb(94, 94, 124);
+  /* Información de la parcela en azul */
+  font-size: 1.2em;
+  /* Tamaño de fuente para la información */
+  margin-bottom: 15px;
+  font-weight: bold;
+  /* Texto en negrita */
+}
+
+.informacion button {
+  border: 1px solid rgb(255, 69, 69);
+  color: rgb(255, 69, 69);
+
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  /* Cambia el cursor al pasar por encima */
+  font-size: 1em;
+  display: flex;
+  /* Para alinear el texto y el icono */
+  align-items: center;
+  /* Centra verticalmente el texto y el icono */
+  gap: 8px;
+  /* Espacio entre el texto y el icono */
+  transition: background-color 0.3s ease;
+  /* Transición suave al pasar el ratón */
+}
+
+.informacion button:hover {
+  background-color: #ff2626;
+  color: white;
+
+}
+
+.informacion button mat-icon {
+  font-size: 1.2em;
+  /* Ajusta el tamaño del icono */
+  line-height: 1;
+  /* Asegura que el icono esté bien alineado */
+}
+
+.danger_btn {
   background-color: #32bb09;
   color: white;
   border: none;
@@ -21,6 +91,65 @@
   cursor: pointer;
 
 }
-.danger_btn:hover{
+
+.danger_btn:hover {
   background-color: #32e61a;
+}
+
+.formulario-actividades {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 320px;
+  background-color: rgb(255, 255, 255);
+}
+
+.formulario-actividades form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 80%;
+  padding: 10px;
+
+}
+
+.btn-actions {
+  display: flex;
+  justify-content: space-evenly;
+
+}
+
+.btn-actions button {
+  width: 100px;
+  height: 40px;
+  font-size: 16px;
+  padding: 18px;
+}
+
+/*estilos para el spinner*/
+.loading {
+  opacity: 0.5;
+}
+
+/*estilos para los botones de accion de cultivo*/
+
+.actividad_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.actividad_container span {}
+
+.btn-ct {
+  width: 40px;
+
+
+
 }

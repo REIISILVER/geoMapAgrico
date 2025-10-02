@@ -1,0 +1,52 @@
+<main>
+  @if (listaRecursos.length > 0) {
+  <div class="cuerpoForm">
+    <form [formGroup]="formRecursos">
+      <div formArrayName="items" class="contI">
+        @for (item of items.controls; track $index) {
+        <div class="critic" [formGroupName]="$index">
+
+          <mat-form-field>
+            <mat-label>Nombre</mat-label>
+            <input matInput type="text" formControlName="nombre" [value]="items.get('nombre')?.value">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>descripcion</mat-label>
+            <textarea matInput formControlName="descripcion"></textarea>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>tipo</mat-label>
+            <input matInput type="text" formControlName="tipo">
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>cantidad</mat-label>
+            <input matInput type="text" formControlName="cantidad">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>unidad</mat-label>
+            <input matInput type="text" formControlName="unidad">
+          </mat-form-field>
+
+          <div class="botones">
+            @if(editmode){
+            <mat-icon fontIcon="save" (click)="sendUpdate(item.get('id')?.value)"></mat-icon>
+            <mat-icon fontIcon="cancel" (click)="cancelUpdate(item.get('id')?.value)"></mat-icon>
+            }@else{
+            <mat-icon fontIcon="edit" (click)="activarUpdate(item.get('id')?.value)"></mat-icon>
+            }
+
+            <mat-icon fontIcon="delete" (click)="deleteElemento(item.get('id')?.value)"></mat-icon>
+          </div>
+
+        </div>
+        }
+
+      </div>
+    </form>
+  </div>
+}
+  @else{
+  <span>Noy hay insumos</span>
+  }
+</main>

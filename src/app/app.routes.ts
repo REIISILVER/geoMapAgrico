@@ -11,26 +11,31 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-       loadComponent: () => import('./auth/components/login/login.component').then(m => m.LoginComponent)
+        loadComponent: () => import('./auth/components/login/login.component').then(m => m.LoginComponent)
       }
     ]
   },
   {
-    path:'main',
+    path: 'main',
     loadComponent: () => import('./main/main.component').then(m => m.MainComponent),
+
     children: [
       {
-        path:'home',
+        path: 'home',
         loadComponent: () => import('./main/pages/home/home.component').then(m => m.HomeComponent)
       },
       {
-        path:'**',
-        redirectTo:'home'
+        path: 'cultivo/:id',
+        loadComponent: () => import('./main/pages/admin-cultivo/admin-cultivo.component').then(m => m.AdminCultivoComponent)
+      },
+      {
+        path: '**',
+        redirectTo: 'home'
       }
     ]
   },
   {
-    path:'**',
+    path: '**',
     redirectTo: 'auth/login',
   }
 ];

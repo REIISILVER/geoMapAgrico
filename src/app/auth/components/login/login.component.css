@@ -25,3 +25,7 @@ main .card form{
   flex-direction: column;
   width: 100%;
 }
+
+.loading{
+  opacity: 0.5;
+}

@@ -1,15 +1,15 @@
-<main>
+<main class="main">
   <div class="card">
     <h1>AgroMap</h1>
     <form (submit)="login($event)" class="login-form" [formGroup]="loginForm">
-      <mat-form-field  [ngStyle]="{'background-color':'white','outline':'none'}">
+      <mat-form-field [ngStyle]="{'background-color':'white','outline':'none'}">
         <mat-label>email</mat-label>
         <input formControlName="email" type="text" matInput>
         @if(loginForm.controls['email'].hasError('pattern') && !loginForm.controls['email'].hasError('required')) {
-          <mat-error>email invalido</mat-error>
+        <mat-error>email invalido</mat-error>
         }
         @if(loginForm.controls['email'].hasError('required')) {
-          <mat-error>email es <strong>requerido</strong></mat-error>
+        <mat-error>email es <strong>requerido</strong></mat-error>
 
         }
       </mat-form-field>
@@ -17,17 +17,24 @@
         <mat-label>contraseña</mat-label>
         <input formControlName="password" type="password" matInput>
         @if(loginForm.controls['password'].hasError('minlength')) {
-          <mat-error>contraseña debe tener al menos <strong>6 caracteres</strong></mat-error>
+        <mat-error>contraseña debe tener al menos <strong>6 caracteres</strong></mat-error>
         }
         @if(loginForm.controls['password'].hasError('required')) {
-          <mat-error>contraseña es <strong>requerida</strong></mat-error>
+        <mat-error>contraseña es <strong>requerida</strong></mat-error>
         }
       </mat-form-field>
       <div class="input-btn">
         <button type="submit" mat-button>Iniciar sesión</button>
         <button routerLink="/auth/register" mat-button [ngStyle]="{'color':'black'}">Registrarse</button>
-        </div>
+      </div>
 
     </form>
   </div>
 </main>
+
+@if(loading){
+<spinner></spinner>
+}
+@if(messActive){
+<app-message [mensaje]="mensaje" [color]="color"></app-message>
+}

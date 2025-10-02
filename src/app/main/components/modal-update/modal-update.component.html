@@ -1,0 +1,10 @@
+<mat-card>
+  <mat-dialog-content class="mat-typography">
+    <p>¿Estas seguro que quieres <span>{{accion}}</span> esta parcela?</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="TriggerEvent(false)">Cancel</button>
+    <button mat-button (click)="TriggerEvent(true)">{{accion |titlecase}}</button>
+  </mat-dialog-actions>
+
+</mat-card>

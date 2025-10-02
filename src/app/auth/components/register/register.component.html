@@ -1,4 +1,4 @@
-<main>
+<main class="main">
   <h1>Register</h1>
   <form (ngSubmit)="createUser($event)" [formGroup]="registerForm" class="register-form">
     <mat-form-field class="form-field" appearance="outline">
@@ -32,7 +32,7 @@
     </mat-form-field>
      <mat-form-field appearance="outline">
       <mat-label>Vuelve a escribir la contraseña</mat-label>
-      <input formControlName="confirmPassword" matInput type="password">
+      <input  formControlName="confirmPassword" matInput type="password">
       @if (evaluatePasswordMatch() == false) {
         <mat-error>No es la misma contraseña </mat-error>
       }
@@ -57,3 +57,11 @@
     </div>
   </form>
 </main>
+
+@if(loading){
+  <spinner></spinner>
+}
+@if(showMessage){
+  <app-message [mensaje]="mensaje" [color]="color"></app-message>
+}
+

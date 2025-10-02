@@ -1,0 +1,34 @@
+<main >
+  <h1>Formulario de registro de insumos</h1>
+  <form [formGroup]="formR">
+    <mat-form-field appearance="outline" class="formC">
+      <mat-label>Nombre</mat-label>
+      <input  formControlName="nombre" type="text" matInput>
+    </mat-form-field>
+      <mat-form-field  appearance="outline">
+      <mat-label>Descripcion</mat-label>
+      <textarea formControlName="descripcion" type="text" matInput > </textarea>
+    </mat-form-field>
+      <mat-form-field  appearance="outline">
+      <mat-label>Tipo</mat-label>
+      <input formControlName="tipo" type="text" matInput>
+    </mat-form-field>
+      <mat-form-field  appearance="outline">
+      <mat-label>Cantidad</mat-label>
+      <input formControlName="cantidad" type="text" matInput>
+    </mat-form-field >
+      <mat-form-field  appearance="outline">
+      <mat-label>Unidad</mat-label>
+        <mat-select formControlName="unidad">
+          @for (valor of medidas; track $index) {
+             <mat-option [value]="valor">{{valor}}</mat-option>
+          }
+
+        </mat-select>
+    </mat-form-field>
+    <div class="btns">
+      <button (click)="enviarRecursos()" mat-raised-button>asignar</button>
+      <button (click)="cancelar()" mat-flat-button>cancelar</button>
+    </div>
+  </form>
+</main>
