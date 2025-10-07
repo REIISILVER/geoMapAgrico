@@ -1,5 +1,5 @@
 export const  enviroment = {
-  api: 'https://gestogricola.kesug.com/api',
+  api: 'https://geomapagrico-backend.onrender.com/api',
   api_clima: 'https://api.open-meteo.com/v1/forecast?',
   api_clima2: '&current=temperature_2m,wind_speed_10m,weathercode&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,weathercode'
 }
