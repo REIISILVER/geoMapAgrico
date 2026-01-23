@@ -1,0 +1,35 @@
+<main class="error-container">
+  <section class="error-card">
+    @switch (errorCode()) {
+      @case('404'){
+        <h1 class="code blue">{{errorCode()}}</h1>
+        <h3>{{errors["404"].title}}</h3>
+        <p>{{errors["404"].message}}</p>
+      }
+      @case ('403') {
+        <h1 class="code orange">{{errorCode()}}</h1>
+        <h3>{{errors["403"].title}}</h3>
+        <p>{{errors["403"].message}}</p>
+      }
+      @case ('401') {
+        <h1 class="code orange">{{errorCode()}}</h1>
+        <h3>{{errors["401"].title}}</h3>
+        <p>{{errors["401"].message}}</p>
+      }
+      @case('500'){
+        <h1 class="code red">{{errorCode()}}</h1>
+        <h3>{{errors["500"].title}}</h3>
+        <p>{{errors["500"].message}}</p>
+      }
+      @default {
+        <h1 class="code gray">{{errorCode() || '???'}}</h1>
+        <h3>Unknown Error</h3>
+        <p>Ha ocurrido un error inesperado.</p>
+      }
+    }
+
+    <button routerLink="/auth/login" class="btn-back">
+      Volver al Inicio
+    </button>
+  </section>
+</main>

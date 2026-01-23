@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 import { AuthService } from '../../services/auth.service';
 import { Rols } from '../../interfaces/auth.interfaces';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { SpinnerComponent } from '../../../barril/shared/spinner/spinner.component';
 import { loadingSpinner } from '../../../../barril/helpers';
 import { MessageComponent } from '../../../barril/message/message.component';
@@ -39,6 +39,8 @@ export class RegisterComponent {
     }
   )
 
+  public route = inject(Router);
+
 
   createUser(e: Event) {
     e.preventDefault();
@@ -63,9 +65,12 @@ export class RegisterComponent {
           this.loading = loadingSpinner(this.loading);
           this.switchMessage(resp.mensaje, true);
           this.registerForm.reset();
+          setTimeout(() => {
+            this.route.navigateByUrl('/auth/login');
+          }, 1000);
         },
         error: (err: HttpErrorResponse) => {
-          console.error('Error registering user', err);
+
           this.loading = loadingSpinner(this.loading);
            this.switchMessage(err.message, false);
 

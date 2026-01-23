@@ -24,7 +24,7 @@ export class AuthService {
 
   logou_user(id:number):Observable<any>{
     const obj = {user_id : id}
-    console.log('enviando...',obj)
+
     return this.http.post<any>(this.apiUrl+'logout',obj)
   }
 }
