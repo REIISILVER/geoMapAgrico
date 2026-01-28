@@ -83,7 +83,7 @@ export class RecursosTableComponent implements OnChanges {
           this.emitirMensaje(resp.mensaje)
         },
         error: (err: HttpErrorResponse) => {
-          console.error(err)
+          console.error('error al eliminar el recurso')
         }
       }
     )
@@ -128,8 +128,7 @@ export class RecursosTableComponent implements OnChanges {
                 this.emitirMensaje(resp.mensaje)
               },
               error: (erro: HttpErrorResponse) => {
-                console.error(erro)
-              }
+                console.error('error al actualizar el recursso');              }
             }
           )
 

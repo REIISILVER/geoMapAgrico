@@ -4,14 +4,13 @@
       <picture>
         <img src="logo.jpg" alt="#">
       </picture>
-      <ul>
-        <li><mat-icon routerLink="/main/home" fontIcon="home"></mat-icon></li>
 
+        <mat-icon class="iconH" routerLink="/main/home" fontIcon="home"></mat-icon>
         <!-- Por ahora se le ubicara aqui -->
-        <li><mat-icon (click)="logout()" fontIcon="logout"></mat-icon></li>
-      </ul>
+        <mat-icon (click)="logout()" fontIcon="logout"></mat-icon>
+
     </nav>
   </section>
-  <router-outlet></router-outlet>
+  <router-outlet ></router-outlet>
 </main>
 

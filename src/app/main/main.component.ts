@@ -17,17 +17,15 @@ export class MainComponent {
 
   logout(){
     const user_id = Number(localStorage.getItem('user'));
-
+    //limpiamos los datos del localstorage
+    localStorage.clear();
+    this.router.navigate(['/auth/login'])
+    //llamamos al servicio para cerrar la sesion en el backend
     this.auths.logou_user(user_id).subscribe({
       next: (data) => {
-        console.log('datos: ', data)
-        setTimeout(() => {
-         this.router.navigate(['/auth/login'])
-        }, 3000);
-
       },
       error: (err) => {
-        console.error(err)
+        console.error('Error al cerrar sesion')
       }
     });
   }

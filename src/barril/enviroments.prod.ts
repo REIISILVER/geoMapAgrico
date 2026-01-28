@@ -1,8 +1,9 @@
 const dev = 'http://localhost:8000/api';
-const prod = 'https://geo-map-agrico.vercel.app/api';
+const prod = 'https://geomapagrico-backend.onrender.com/api';
+
 
 export const  enviroment = {
-  api: dev,
+  api: prod,
   api_clima: 'https://api.open-meteo.com/v1/forecast?',
   api_clima2: '&current=temperature_2m,wind_speed_10m,weathercode&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,weathercode'
 }

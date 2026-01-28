@@ -5,7 +5,7 @@
 
     <!-- <app-barSearch (result)="obtenervalor($event)" class="searchBar"> </app-barSearch> -->
 
-    <app-map (modalModify)="getStatusModal($event)" (modalActiveEmitter)="StatusModal($event)" [ngStyle]="{'height':'500px','width':'400px'}"
+    <app-map #mapComponent (modalModify)="getStatusModal($event)" (modalActiveEmitter)="StatusModal($event)" [ngStyle]="{'height':'500px','width':'400px'}"
       [Parcelas]="parcelas" (ObjParcela)="getInforParcela($event)" (ModifiObj)="getObjectModify($event)" (Pacelageom)="almacenarParcela($event)"></app-map>
 
   </section>

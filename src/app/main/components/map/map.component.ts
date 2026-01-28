@@ -17,7 +17,7 @@ import GeoJSON from 'ol/format/GeoJSON.js';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { Geom, Geometry, Tipos, updateParcela } from '../../interfaces/draw.interfaces';
+import { Geom, Tipos, updateParcela } from '../../interfaces/draw.interfaces';
 import Interaction from 'ol/interaction/Interaction';
 import Select from 'ol/interaction/Select.js';
 import "ol-ext/dist/ol-ext.css"
@@ -81,6 +81,9 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private mapClickSubscription: any; //subscription para eventos del mapa
 
+  //variavle para almacenar un dibujo temporalmente para luego eliminarlo si es necesario
+  tempDrawFeature: Feature<gemotries> | null = null;
+
 
   ngOnChanges(changes: SimpleChanges): void {
 
@@ -89,7 +92,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     layersToRemove.forEach(layer => this.map.removeLayer(layer));
 
     //ahi que crear features a partir de las parcelas recibidas
-    console.log('ha sucedido un cambio',this.Parcelas);
     const features: Feature<gemotries>[] = this.Parcelas.map((parcela) => {
       const geojson = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' });
       //const feature = geojson.readFeature(parcela.ubicacion, { featureProjection: 'EPSG:3857' });
@@ -267,7 +269,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   getStyles(feature: any) {
     const stileB = new Style({
       fill: new Fill({
-        color: 'rgba(255, 123, 0, 0.5)'
+        color: 'rgba(245, 116, 30, 0.5)'
       }),
       text: new Text(
         {
@@ -283,6 +285,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     return stileB;
   }
+
+
 
   //hacer que sea una promesa para que se pueda usar en otros componentes
   async GetLatLng(): Promise<any> {
@@ -318,7 +322,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         //se agrega el feature al vector source
         const feature = event.feature;
-
+        this.tempDrawFeature = feature;
 
         //se envia el id del punto dibujado al padre
         this.descargarElementos(feature)
@@ -336,7 +340,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         //se agrega el feature al vector source
         const feature = event.feature;
 
-
+        this.tempDrawFeature = feature;
         //se envia el id del punto dibujado al padre
         this.descargarElementos(feature)
       });
@@ -352,7 +356,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         this.enableModal()
         //se agrega el feature al vector source
         const feature = event.feature;
-
+        this.tempDrawFeature = feature;//esto es para almacenar temporalmente
 
         //se envia el id del punto dibujado al padre
         this.descargarElementos(feature)
@@ -416,8 +420,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     //aqui se envia mediante output al componente padre para que se guarde en el backend
   }
 
-  eliminarunElemento() {
-
+  eliminarUltimoElemento() {
+    if (this.tempDrawFeature) {
+      this.vectorSource.removeFeature(this.tempDrawFeature);
+      this.tempDrawFeature = null;
+    }
   }
 
   enableModal() {

@@ -74,7 +74,6 @@ export class ActividadesModalComponent {
 
   guardarCultivo(){
     if(this.formCultivo.invalid){
-      console.error('Formulario inválido');
       return;
     }
 
@@ -103,7 +102,6 @@ export class ActividadesModalComponent {
         },
         error: (err) => {
           this.loading = loadingSpinner(this.loading);
-          console.error('Error al guardar el cultivo', err);
            this.formCultivo.reset();
           this.agCultivo = false;
         }
@@ -131,7 +129,6 @@ export class ActividadesModalComponent {
     const fechaCosecha = new Date(this.formCultivo.value.fecha_cosecha);
 
     if(fechaCosecha < fechaCultivo){
-      console.error('La fecha de cosecha no puede ser anterior a la fecha de cultivo');
       return false;
     }
     return true;
@@ -152,7 +149,6 @@ export class ActividadesModalComponent {
       },
       error: (err: HttpErrorResponse) => {
           this.loading = loadingSpinner(this.loading);
-        console.error('Error al eliminar el cultivo', err);
       }
     })
   }

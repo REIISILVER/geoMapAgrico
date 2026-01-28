@@ -20,7 +20,6 @@ export class ModalUpdateComponent {
     this.dialog.open(ModalUpdateComponent);
 
     this.dialog.afterAllClosed.subscribe(result => {
-      console.log('The dialog was closed', result);
     });
   }
 

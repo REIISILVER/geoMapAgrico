@@ -132,7 +132,7 @@ export class AdminCultivoComponent implements OnInit {
 
       },
       error: (err: HttpErrorResponse) => {
-        console.error(err)
+        console.error('Error al cargar los datos del cultivo')
         this.loading = loadingSpinner(this.loading)
       }
     })
@@ -169,7 +169,7 @@ export class AdminCultivoComponent implements OnInit {
           this.maincontainer.nativeElement.style.opacity = "1";
         },
         error: (err: HttpErrorResponse) => {
-          console.error(err)
+          console.error('Error al crear la actividad');
           this.loading = loadingSpinner(this.loading)
           this.maincontainer.nativeElement.style.opacity = "1";
         }
@@ -225,7 +225,7 @@ export class AdminCultivoComponent implements OnInit {
           this.maincontainer.nativeElement.style.opacity = "1";
         },
         error: (error: HttpErrorResponse) => {
-          console.error(error)
+          console.error('Error al crear el recurso');
           this.loading = loadingSpinner(this.loading)
           this.switchMessage('Error al crear el recurso');
           this.maincontainer.nativeElement.style.opacity = "1";
@@ -278,7 +278,7 @@ export class AdminCultivoComponent implements OnInit {
           this.formCultivo.disable();
         },
         error: (err: HttpErrorResponse) => {
-          console.error(err)
+          console.error('Error al actualizar el cultivo');
           this.switchMessage(err.message);
           this.editCultivoStatus = false;
           this.formCultivo.disable();

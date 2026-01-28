@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, viewChild, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MapComponent } from '../../components/map/map.component';
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Parcelas, ParcelasInfo } from '../../interfaces/parcelas.interfaces';
 import { ActividadesModalComponent } from '../../components/actividades-modal/actividades-modal.component';
 import { SpinnerComponent } from '../../../barril/shared/spinner/spinner.component';
-import e from 'express';
 import { CultivosService } from '../../services/cultivos.service';
 import { Cultivos } from '../../interfaces/cultivos.interfaces';
 import { ModalUpdateComponent } from '../../components/modal-update/modal-update.component';
@@ -28,7 +27,7 @@ import { MessageComponent } from '../../../barril/message/message.component';
 export class HomeComponent implements OnInit {
 
   @ViewChild('main') main!: ElementRef<HTMLElement>
-
+  @ViewChild('mapComponent') mapComponent!: MapComponent;
 
   user_id: number = Number(localStorage.getItem('user')) || 0;
 
@@ -82,7 +81,7 @@ export class HomeComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.StatusLoading();
-          console.error('Error al obtener las parcelas', err);
+          console.error('Error al obtener las parcelas');
         }
       }
     )
@@ -95,7 +94,12 @@ export class HomeComponent implements OnInit {
   }
 
   StatusModal(e: boolean) {
+    this.ActividadModal = false;
     this.ModalActive = e
+    if(!this.ModalActive){
+      this.mapComponent.eliminarUltimoElemento();
+
+    }
   }
 
   getParcela(e: string) {
@@ -115,15 +119,15 @@ export class HomeComponent implements OnInit {
     this.MainService.enviarParcela(obj).subscribe(
       {
         next: (res) => {
-          console.log('respuesta del backend', res)
+
           this.switchMensaje(res.mensaje, true)
           //agregamos la parcela al array de parcelas para que se muestre en el mapa sin necesidad de recargar la pagina
            this.parcelas = [...this.parcelas, res.data];
-          console.log('parcelas', this.parcelas)
+
           // TODO: Actualizar la lista de parcelas desde el backend para reflejar la nueva parcela
         },
         error: (err: HttpErrorResponse) => {
-          console.error('error al enviar la parcela', err)
+          console.error('error al enviar la parcela')
 
         }
       }
@@ -165,11 +169,11 @@ export class HomeComponent implements OnInit {
     this.cultServices.obtenerCultivos(parcela_id).subscribe(
       {
         next: (resp) => {
-          console.log('Cultivos obtenidos:', resp);
+
           this.cultivos = resp.data
         },
         error: (err: HttpErrorResponse) => {
-          console.error('Error al obtener los cultivos', err);
+          console.error('Error al obtener los cultivos');
 
         }
       }
@@ -179,21 +183,20 @@ export class HomeComponent implements OnInit {
   getStausUpdate(e: boolean) {
     this.status = e;
     this.statusModal = false;
-    console.log('status para actualizar o eliminar:', this.status)
+
     //se hace la condicional para saber si se actualiza o elimina
     if (this.status) {
       //actualizar parcela
 
-      console.log('actualizar parcela', this.objParcelaUpdate)
+
       this.MainService.updateParcela(this.objParcelaUpdate).subscribe(
         {
           next: (resp) => {
-            console.log('parcela que se envio', this.objParcelaUpdate)
-            console.log('parcela actualizada:', resp)
+
             this.switchMensaje(resp.mensaje, true)
           },
           error: (err: HttpErrorResponse) => {
-            console.error('error al actualizar parcela:', err)
+            console.error('error al actualizar parcela')
             this.switchMensaje(err.message, false)
           }
         }
@@ -215,7 +218,7 @@ export class HomeComponent implements OnInit {
     this.statusDelete = e;
     this.loading = loadingSpinner(this.loading);
     if (this.statusDelete) {
-      console.log('eliminar parcela', this.parcela_Info.id)
+
       this.deleteParcela();
     } else {
       this.showTooltip = false;
@@ -224,7 +227,7 @@ export class HomeComponent implements OnInit {
 
   showTooltipDelete(e: boolean) {
     this.showTooltip = e;
-    console.log('mostrar tooltip', this.showTooltip)
+
   }
 
   deleteParcela() {
@@ -233,7 +236,7 @@ export class HomeComponent implements OnInit {
     this.MainService.DeleteParcela(id_parcela).subscribe(
       {
         next: (resp) => {
-          console.log('parcela eliminada', resp);
+
           this.ActividadModal = false;
           this.showTooltip = false;
           this.parcelas = this.parcelas.filter(parcela => parcela.id !== id_parcela);
@@ -246,7 +249,7 @@ export class HomeComponent implements OnInit {
            }, 3000);
         },
         error: (err: HttpErrorResponse) => {
-          console.error('error al eliminar parcela', err);
+          console.error('error al eliminar parcela');
           this.ActividadModal = false;
           this.loading = loadingSpinner(this.loading);
           this.mensaje = err.message;

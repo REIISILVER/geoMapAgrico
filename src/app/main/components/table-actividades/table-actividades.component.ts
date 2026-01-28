@@ -83,7 +83,7 @@ export class TableActividadesComponent implements OnChanges {
           this.mensjaeEmiter.emit(resp.mensaje)
         },
         error: (err: HttpErrorResponse) => {
-          console.error(err)
+          console.error('Error al eliminar la actividad')
         }
       }
     )
@@ -131,7 +131,7 @@ export class TableActividadesComponent implements OnChanges {
               this.mensjaeEmiter.emit(resp.mensaje)
             },
             error: (err: HttpErrorResponse) => {
-              console.error(err)
+              console.error('Error al actualizar la actividad')
               this.mensjaeEmiter.emit(err.error.mensaje)
             }
           }

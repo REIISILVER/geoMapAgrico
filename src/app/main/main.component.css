@@ -35,3 +35,11 @@ picture img{
 
 
 }
+
+.iconH:hover {
+  cursor: pointer;
+  color: #1976d2;
+
+}
+
+

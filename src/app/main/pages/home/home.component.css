@@ -9,6 +9,7 @@ main {
 
 .map-container {
   align-self: center;
+  margin-top: 2%;
 }
 
 .modal {
@@ -25,3 +26,8 @@ main {
 .modal_padre{
   margin-top: 15px;
 }
+
+
+
+
+
