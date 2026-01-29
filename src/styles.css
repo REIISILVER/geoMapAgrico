@@ -2,8 +2,7 @@
 /* src/styles.css */
 @import 'ol/ol.css';
 @import 'ol-ext/dist/ol-ext.css'; /* Si usas ol-ext */
-@import 'ol-layerswitcher/dist/ol-layerswitcher.css'; /* Si usas layerswitcher */
-@import 'ol-geocoder/dist/ol-geocoder.min.css'; /* Si usas geocoder */
+
 
 /* Forzar visualización de iconos */
 .ol-control button {
